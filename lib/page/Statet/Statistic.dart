@@ -4,7 +4,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:club_v01/page/Menu.dart';
-import 'package:flutter/services.dart';
+import 'package:csv/csv.dart';
+import 'dart:async' show Future;
+import 'package:flutter/services.dart' show rootBundle;
 
 
 
@@ -38,7 +40,18 @@ class _StatisticState extends State<Statistic> {
         drawer: MenuDrawer(),
         body:SingleChildScrollView(
           child:  Column(children: [
-          Text('Версия приложения'),
+          Text('Статистика БД:'),
+            Table(
+              children: [
+                TableRow(children:[
+                  Text("Данные1"),
+                ],
+                ),
+              ],
+            ),
+            Text('Список пользователей:'),
+            Text('Список Абониментов:'),
+            Text('Список Клиентов:'),
 
            ],),
         ),
