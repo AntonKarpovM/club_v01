@@ -1,10 +1,8 @@
-
-
+import 'package:club_v01/DataBase/DataBase.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:club_v01/page/Menu.dart';
 import 'package:csv/csv.dart';
-import 'dart:async' show Future;
 import 'package:flutter/services.dart' show rootBundle;
 
 
@@ -17,6 +15,8 @@ class Statistic extends StatefulWidget {
 }
 
 class _StatisticState extends State<Statistic> {
+
+  DataBase? Data;
 
   File? image;
 
@@ -55,26 +55,10 @@ void selectDate(BuildContext context,But)async {
         }
         else
         {
-          selectedDateEnd = picked;
+          selectedDateStart = picked;
         }
       });
     }
-
-  }
-
-  void StatBd() async{
-
-  }
-
-  void ListAcount() async {
-
-  }
-
-  void ListClient()async{
-
-  }
-
-  void ListAboniment()async{
 
   }
 
@@ -138,6 +122,8 @@ void selectDate(BuildContext context,But)async {
                     data.add(["Кол-во абониментов:",132]);
                     data.add(["последние внесение в бд:",132]);
                     data.add(["Послдняя выгрузка бд:",132]);
+
+
 
                     setState(() {
 
