@@ -16,7 +16,7 @@ class Statistic extends StatefulWidget {
 
 class _StatisticState extends State<Statistic> {
 
-  DataBase? Data;
+  Data_Base Data_Base_work = Data_Base();
 
   File? image;
 
@@ -115,20 +115,16 @@ void selectDate(BuildContext context,But)async {
 
                     NameTable = "Статистика БД";
 
+
+
                     data.clear();
-                    data.add(["Размер бд(мб):",132]);
-                    data.add(["Кол-во акк:",132]);
-                    data.add(["Кол-во клиентов:",132]);
-                    data.add(["Кол-во абониментов:",132]);
-                    data.add(["последние внесение в бд:",132]);
-                    data.add(["Послдняя выгрузка бд:",132]);
+                    data = await Data_Base_work.Date_Base_User();
 
 
 
                     setState(() {
 
                     });
-                    print(data);
                   }, child:Text("Статистика БД", style: TextStyle(fontSize: 17),)),
 
                   ElevatedButton(onPressed: () async {
@@ -136,17 +132,13 @@ void selectDate(BuildContext context,But)async {
                     NameTable = "Список пользователей";
 
                     data.clear();
-                    data.add(["Размер бд(мб):",132]);
-                    data.add(["Кол-во акк:",132]);
-                    data.add(["Кол-во клиентов:",132]);
-                    data.add(["Кол-во абониментов:",132]);
-                    data.add(["последние внесение в бд:",132]);
-                    data.add(["Послдняя выгрузка бд:",132]);
+
+                    data = await Data_Base_work.Date_Base_User();
+
 
                     setState(() {
 
                     });
-                    print(data);
                   }, child:Text("Список пользователей", style: TextStyle(fontSize: 17),)),
 
                   ElevatedButton(onPressed: () async {

@@ -7,8 +7,17 @@ import 'package:club_v01/page/Client/Client_creator.dart';
 import 'package:club_v01/page/SplashScreen.dart';
 import 'package:club_v01/page/Authorization.dart';
 import 'package:club_v01/page/Statet/Statistic.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:club_v01/DataBase/DataBase.dart';
 
-void main() =>runApp(MaterialApp(
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserAdapter());
+  print("Hive инициализирован!");
+  runApp(MaterialApp(
     theme: ThemeData(
       primaryColor: Colors.deepOrangeAccent,
     ),
@@ -25,5 +34,6 @@ void main() =>runApp(MaterialApp(
       '/Abo_cre':(context)=> Aboniment_creator(),
     },
   ));
+}
 
 
