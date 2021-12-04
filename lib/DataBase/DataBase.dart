@@ -1,10 +1,10 @@
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+part 'DataBase.g.dart';
 
 
-class Data_Base
-{
+class Data_Base extends ReadWriter {
 
   //инициализация
   Data_Base(){
@@ -13,75 +13,99 @@ class Data_Base
 
   //Функция
   void Start()async{
+    String NameT = "Function";
     String Name = "Start";
-    Message(Name,"Инициализация HIVE");
+    Message(NameT,Name,"Инициализация HIVE");
   }
 
   //Функция сообщений
-  void Message(String NF,Mess) async {
-   print('Название функции($NF):Сообщенние($Mess)');
-  }
-
-   Future< List<List<dynamic>>> Date_Base_User() async {
-     String Name = "Date_Base_User";
-     List<List<dynamic>> DataExport = [];
-     var box = await Hive.openBox<User>("TestUser");
-     final user = User('Anton','12',555);
-
-     DataExport.add(["test","test","test"]);
 
 
-     await box.add(user);
-     int BoxL = box.length;
-     while(BoxL>0)
-     {
-       BoxL = BoxL -1;
-       DataExport.add([box.getAt(BoxL)!.Login,box.getAt(BoxL)!.Pass,box.getAt(BoxL)!.Date]);
-     }
-      Message(Name, "Вытащили данные из тестовой таблицы USER");
+
+
+  Future< List<List<dynamic>>> Date_Base_Stat() async{
+    String Name = "Date_Base_User";
+    List<List<dynamic>> DataExport = [];
+    DataExport.add(["test","test"]);
+    DataExport.add(["Размер бд(мб):",]);
+    DataExport.add(["Кол-во акк:",132]);
+    DataExport.add(["Кол-во клиентов:",132]);
+    DataExport.add(["Кол-во абониментов:",132]);
+    DataExport.add(["последние внесение в бд:",132]);
+    DataExport.add(["Послдняя выгрузка бд:",132]);
     return DataExport;
-
-
-
   }
-
-
 
 
 }
 
-//Юзер
-class User{
+class ReadWriter{
+  ReadWriter(){
 
+  }
+   var box;
+
+  Future< List<List<dynamic>>> Read(String NameBox)async{
+    String NameT = "Function";
+    String Name = "Read[ReadWriter]";
+    List<List<dynamic>> DataExport = [];
+    box = await Hive.openBox(NameBox);
+    int BoxL = box.length;
+    while(BoxL>0)
+    {
+      BoxL = BoxL -1;
+      DataExport.add(box.getAt(0)?.DataExport());
+    }
+    Message(NameT,Name, "Вытащили данные из тестовой таблицы ($NameBox)");
+    return DataExport;
+  }
+// я как даун занес "NameBox" в боксы
+  void Write(var ObjectAdd,String NameBox) async{
+    String NameT = "Function";
+    String Name = "Write[ReadWriter]";
+    box = await Hive.openBox(NameBox);
+    box.add(ObjectAdd);
+
+    Message(NameT,Name, "открыли тест таблицу($NameBox ) и записали ($ObjectAdd)");
+
+  }
+
+  void ClosedBox(String NameBox){
+   Hive.box(NameBox).close();
+  }
+
+  void DeliteBox(String NameBox){
+    Hive.deleteBoxFromDisk(NameBox);
+  }
+
+}
+
+
+
+
+
+
+//Юзер
+@HiveType(typeId: 0)
+class User {
+  @HiveField(0)
   String Login;
+  @HiveField(1)
   String Pass;
+  @HiveField(2)
   int Date;
+
   User(this.Login,this.Pass,this.Date);
 
   @override
   String  toString() => "Login($Login):Pass( $Pass):Date( $Date)";
 
-
+ List<dynamic> DataExport() => [Login,Pass,Date];
 }
 
 
-//Адаптер юзера
-class UserAdapter extends TypeAdapter<User> {
-  @override
-  final typeId = 0;
 
-  @override
-  User read(BinaryReader reader) {
-    final LoginUser = reader.readString();
-    final PassUser =reader.readString();
-    final DateUser =reader.readInt();
-    return User(LoginUser,PassUser,DateUser);
-  }
 
-  @override
-  void write(BinaryWriter writer, User obj) {
-    writer.write(obj.Login);
-    writer.write(obj.Pass);
-    writer.write(obj.Date);
-  }
+void Message(String NT,NF,Mess) async {
+  print('Тип обьекта($NT):Название($NF):Сообщенние($Mess)');
 }

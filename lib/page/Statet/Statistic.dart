@@ -118,13 +118,18 @@ void selectDate(BuildContext context,But)async {
 
 
                     data.clear();
-                    data = await Data_Base_work.Date_Base_User();
+                    // пречень боксов ({TestUser}{NameBox})
+                    //первая запись в бд
+                 //   Data_Base_work.Write(User("Anton", "123", 310798),"TestUser");
+                    data = await Data_Base_work.Read("TestUser");
+
 
 
 
                     setState(() {
 
                     });
+
                   }, child:Text("Статистика БД", style: TextStyle(fontSize: 17),)),
 
                   ElevatedButton(onPressed: () async {
@@ -133,7 +138,7 @@ void selectDate(BuildContext context,But)async {
 
                     data.clear();
 
-                    data = await Data_Base_work.Date_Base_User();
+
 
 
                     setState(() {
