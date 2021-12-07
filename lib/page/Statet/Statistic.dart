@@ -121,14 +121,15 @@ void selectDate(BuildContext context,But)async {
                     // пречень боксов ({TestUser}{NameBox})
                     //первая запись в бд
                  //   Data_Base_work.Write(User("Anton", "123", 310798),"TestUser");
-                    data = await Data_Base_work.Read("TestUser");
+                     data = await Data_Base_work.Read("TestBox");
 
-
+                    print(data);
 
 
                     setState(() {
 
                     });
+
 
                   }, child:Text("Статистика БД", style: TextStyle(fontSize: 17),)),
 

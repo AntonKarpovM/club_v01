@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:club_v01/DataBase/DataBase.dart';
+
 
 class MenuDrawer extends StatefulWidget {
   const MenuDrawer({Key? key}) : super(key: key);
@@ -8,6 +10,9 @@ class MenuDrawer extends StatefulWidget {
 }
 
 class _MenuDrawerState extends State<MenuDrawer> {
+
+  late User MainUser;
+
   @override
   Widget build(BuildContext context) {
     return

@@ -1,11 +1,8 @@
-
-
-import 'dart:io';
-
+ import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:club_v01/page/Menu.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:club_v01/DataBase/DataBase.dart';
 
 
 class Authorization extends StatefulWidget {
@@ -16,10 +13,71 @@ class Authorization extends StatefulWidget {
 }
 
 class _AuthorizationState extends State<Authorization> {
-
+  //переменная для бд
+  Data_Base Data_Base_work = Data_Base();
+  //переменны для данных логин
+  String? _Login;
+  String? _Pass;
+  DateTime? _Data;
+  String? _ImagePath;
+  // вспомогательные переменные
   File? image;
-  DateTime selectedDate = DateTime.now();
-  int year = 0;
+
+
+  ProvAuth(bool NonImage) {
+    bool _prov = true;
+    if(_Login=="" || _Login == null){Toast("Запоните Логин!");print('Запоните Логин!');_prov = false;}
+    if(_Pass=="" || _Pass == null){Toast("Запоните Пароль!");print('Запоните Пароль!');_prov = false;}
+    if(NonImage){if(_ImagePath=="" || _ImagePath == null){Toast("Запоните Фото!");print('Запоните Фото!');_prov = false;}}
+    return _prov;
+  }
+
+  void CreateUser()async{
+    if(ProvAuth(true)){
+      if(await SearchUser()== null){
+        Data_Base_work.Write(User(_Login!,_Pass!, _Data!, _ImagePath!), 'TestBox');
+        print('Записал');
+        Toast("Записал");
+      }
+      else{
+        Toast("Такой польщователь уже есть");
+        print("Такой польщователь уже есть");
+      }
+
+    }
+    else{
+      print("Не записал");
+      Toast("Не записал");
+    }
+  }
+
+  void Toast(String Message){
+    ScaffoldMessenger.of(context).showSnackBar(new SnackBar(content: new Text(Message),duration: Duration(seconds: 1),));
+  }
+
+  Future<List?> SearchUser()async{
+
+    if(ProvAuth(false)){
+      List<List<dynamic>> data = await Data_Base_work.Read("TestBox");
+      int i = data.length;
+      while(i>0){
+        i = i-1;
+        if(data[i][0]==_Login && data[i][1]==_Pass){
+          print('нашел');
+          Toast("нашел");
+            return data[i];
+        }
+      }
+    }
+    else{
+      print('Что-то упустили');
+    }
+  }
+
+ void Coming() async {
+   List FindUser =await SearchUser() as List;
+    if(FindUser!= null){Toast("пользователь есть");print('пользователь есть');print(FindUser);Navigator.pushNamed(context, '/help');}
+}
 
   Future pickImage(ImageSource source) async{
 
@@ -27,31 +85,29 @@ class _AuthorizationState extends State<Authorization> {
     {
       final image = await ImagePicker().pickImage(source: source);
       if(image==null)return;
-
-      final imageTemporary = File(image.path);
+    _ImagePath = image.path;
+      final imageTemporary = File(_ImagePath!);
       setState(() => this.image = imageTemporary);
     }
     on PlatformException catch (e)
     {
       print('Прблема возникла:$e');
+      Toast("пользователь есть");
+
     }
   }
 
-
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(1920, 1),
-        lastDate: DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-        year =  DateTime.fromMillisecondsSinceEpoch(DateTime.now().difference(selectedDate).inMilliseconds).year - 1970  ;
-      });
+  _changeLogin(String text){
+    setState(() =>_Login = text);
   }
 
+  _changePass(String text){
+    setState(() =>_Pass = text);
+  }
+
+  void Message(){
+    print("Данные[Логин:($_Login);Пароль:($_Pass);Дата:($_Data);Путь к картинке:($_ImagePath);]");
+  }
 
 
 
@@ -61,18 +117,10 @@ class _AuthorizationState extends State<Authorization> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        drawer: MenuDrawer(),
         body:SingleChildScrollView(
           child:  Column(children: [
-            Row(children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Количество пользователей:"),
-                ],),
-            ],),
 
-            Column(
+           Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 image != null ? Image.file(image!,
@@ -95,8 +143,9 @@ class _AuthorizationState extends State<Authorization> {
               labelText: 'Логин',
               filled: true,
               fillColor: Colors.white,
-            ),
 
+            ),
+                onChanged: _changeLogin
             ),
             TextField( decoration: InputDecoration(
               labelText: 'Пароль',
@@ -105,6 +154,7 @@ class _AuthorizationState extends State<Authorization> {
             ),
               textInputAction: TextInputAction.done,
               keyboardType: TextInputType.numberWithOptions(decimal: true),
+                onChanged: _changePass
             ),
 
 
@@ -112,8 +162,8 @@ class _AuthorizationState extends State<Authorization> {
 
 
 
-            ElevatedButton(onPressed: (){}, child:Text("Войти", style: TextStyle(fontSize: 22),)),
-            ElevatedButton(onPressed: (){}, child:Text("Создать", style: TextStyle(fontSize: 22),)),
+            ElevatedButton(onPressed: (){Coming();Message();}, child:Text("Войти", style: TextStyle(fontSize: 22),)),
+            ElevatedButton(onPressed: (){_Data=DateTime.now();CreateUser();Message();}, child:Text("Создать", style: TextStyle(fontSize: 22),)),
             ElevatedButton(onPressed: (){}, child:Text("Очистить", style: TextStyle(fontSize: 22),)),
           ],),
         ),

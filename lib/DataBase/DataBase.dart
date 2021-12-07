@@ -54,7 +54,10 @@ class ReadWriter{
     while(BoxL>0)
     {
       BoxL = BoxL -1;
-      DataExport.add(box.getAt(0)?.DataExport());
+      List KeyAdd = box.getAt(BoxL)?.DataExport();
+      KeyAdd.add(box.getAt(BoxL)?.key);
+      DataExport.add(KeyAdd);
+
     }
     Message(NameT,Name, "Вытащили данные из тестовой таблицы ($NameBox)");
     return DataExport;
@@ -78,6 +81,11 @@ class ReadWriter{
     Hive.deleteBoxFromDisk(NameBox);
   }
 
+  Future<int> BoxLength(String NameBox) async {
+    if(!Hive.isBoxOpen(NameBox)){box = await Hive.openBox(NameBox);}
+    return box.length;
+  }
+
 }
 
 
@@ -87,20 +95,49 @@ class ReadWriter{
 
 //Юзер
 @HiveType(typeId: 0)
-class User {
+class User extends HiveObject {
   @HiveField(0)
   String Login;
   @HiveField(1)
   String Pass;
   @HiveField(2)
-  int Date;
-
-  User(this.Login,this.Pass,this.Date);
+  DateTime Date;
+  @HiveField(3)
+  String ImagePath;
+  User(this.Login,this.Pass,this.Date,this.ImagePath);
 
   @override
-  String  toString() => "Login($Login):Pass( $Pass):Date( $Date)";
+  String  toString() => "Login($Login):Pass( $Pass):Date( $Date):ImagePath( $ImagePath)";
 
- List<dynamic> DataExport() => [Login,Pass,Date];
+ List<dynamic> DataExport() => [Login,Pass,Date,ImagePath];
+}
+
+
+
+//Абонименты
+@HiveType(typeId: 1)
+class Aboniment extends HiveObject{
+  @HiveField(0)
+  int NumberAbo;
+  @HiveField(1)
+  String NameAbo;
+  @HiveField(2)
+  DateTime DateCreate;
+  @HiveField(3)
+  int KolVoZan;
+  @HiveField(4)
+  int KolVoDay;
+  @HiveField(5)
+  bool Price;
+  @HiveField(6)
+  User Author;
+
+  Aboniment(this.NumberAbo,this.NameAbo,this.DateCreate,this.KolVoZan,this.KolVoDay,this.Price,this.Author);
+
+  @override
+  String  toString() => "Номер($NumberAbo):Имя( $NameAbo):Date( $DateCreate):Количество занятий( $KolVoZan):Количество дней($KolVoDay):Цена($Price):Автор($Author)";
+
+  List<dynamic> DataExport() => [NumberAbo,NameAbo,DateCreate,KolVoZan,KolVoDay,Price,Author];
 }
 
 

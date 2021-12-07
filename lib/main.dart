@@ -24,7 +24,7 @@ void main() async{
 
     initialRoute: '/SplashScreen',
     routes: {
-      '/SplashScreen':(context)=> SplashScreen(nextRoute: '/Client_list'),
+      '/SplashScreen':(context)=> SplashScreen(nextRoute: '/Auth'),
       '/help':(context)=> Help(),
       '/Auth':(context)=> Authorization(),
       '/Stat':(context)=> Statistic(),
