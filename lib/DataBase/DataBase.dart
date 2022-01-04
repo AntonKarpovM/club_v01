@@ -3,7 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 part 'DataBase.g.dart';
 
-
+///список ебанных ящиков [TestBox](описание:{Тестовый ящик с юзерами})
 class Data_Base extends ReadWriter {
 
   //инициализация
@@ -62,6 +62,21 @@ class ReadWriter{
     Message(NameT,Name, "Вытащили данные из тестовой таблицы ($NameBox)");
     return DataExport;
   }
+
+  Future Read_and_get_box(String NameBox)async{
+    String NameT = "Function";
+    String Name = "Read[Read_and_get_box]";
+
+    box = await Hive.openBox(NameBox);
+
+    Message(NameT,Name, "Вытащили данные из тестовой таблицы ($NameBox)");
+    return  box;
+  }
+
+
+
+
+
 // я как даун занес "NameBox" в боксы
   void Write(var ObjectAdd,String NameBox) async{
     String NameT = "Function";
@@ -72,6 +87,19 @@ class ReadWriter{
     Message(NameT,Name, "открыли тест таблицу($NameBox ) и записали ($ObjectAdd)");
 
   }
+
+
+  void WriteDataBaseObject(var ObjectAdd,String NameBox) async{
+    String NameT = "Function";
+    String Name = "Write[ReadWriter]";
+    box = await Hive.openBox(NameBox);
+    box.add(ObjectAdd.key);
+User Man = User('Login', 'Pass', DateTime.now(), 'ImagePath');
+Man.key;
+    Message(NameT,Name, "открыли тест таблицу($NameBox ) и записали ($ObjectAdd)");
+
+  }
+
 
   void ClosedBox(String NameBox){
    Hive.box(NameBox).close();
@@ -85,6 +113,31 @@ class ReadWriter{
     if(!Hive.isBoxOpen(NameBox)){box = await Hive.openBox(NameBox);}
     return box.length;
   }
+
+
+  void WritePut(var ObjectAdd,String NameBox,String ID) async{
+    String NameT = "Function";
+    String Name = "Write[ReadWriter]";
+    box = await Hive.openBox(NameBox);
+    box.put(ID,ObjectAdd);
+
+    Message(NameT,Name, "открыли тест таблицу($NameBox ) и записали ($ObjectAdd)");
+
+  }
+
+
+  Future <dynamic> ReadID(String NameBox,ID)async{
+    String NameT = "Function";
+    String Name = "Read[ReadWriter]";
+    dynamic ObjectReturn;
+    box = await Hive.openBox(NameBox);
+    ObjectReturn = box.get(ID);
+
+
+    Message(NameT,Name, "Вытащили данные из тестовой таблицы ($NameBox)");
+    return ObjectReturn;
+  }
+
 
 }
 
@@ -107,7 +160,7 @@ class User extends HiveObject {
   User(this.Login,this.Pass,this.Date,this.ImagePath);
 
   @override
-  String  toString() => "Login($Login):Pass( $Pass):Date( $Date):ImagePath( $ImagePath)";
+  String  toString() => "$Login):Pass( $Pass):Date( $Date):ImagePath( $ImagePath)";
 
  List<dynamic> DataExport() => [Login,Pass,Date,ImagePath];
 }
@@ -128,9 +181,12 @@ class Aboniment extends HiveObject{
   @HiveField(4)
   int KolVoDay;
   @HiveField(5)
-  bool Price;
+  double Price;
   @HiveField(6)
-  User Author;
+  HiveList<User>? Author;
+
+
+
 
   Aboniment(this.NumberAbo,this.NameAbo,this.DateCreate,this.KolVoZan,this.KolVoDay,this.Price,this.Author);
 
@@ -139,6 +195,49 @@ class Aboniment extends HiveObject{
 
   List<dynamic> DataExport() => [NumberAbo,NameAbo,DateCreate,KolVoZan,KolVoDay,Price,Author];
 }
+
+
+
+
+
+
+
+
+
+
+//Клиенты
+@HiveType(typeId: 2)
+class Client extends HiveObject{
+  @HiveField(0)
+  String NameClient;
+  @HiveField(1)
+  int NumberPhoneHome;
+  @HiveField(2)
+  int NumberPhone;
+  @HiveField(3)
+  String Adress;
+  @HiveField(4)
+  DateTime DateCreate;
+  @HiveField(5)
+  HiveList<User>? Author;
+  @HiveField(6)
+  DateTime DateBrithDay;
+  @HiveField(7)
+  int Year;
+  @HiveField(8)
+  String ImagePath;
+
+
+
+
+  Client(this.NameClient,this.NumberPhoneHome,this.NumberPhone,this.Adress,this.DateCreate,this.Author,this.DateBrithDay,this.Year,this.ImagePath);
+
+  @override
+  String  toString() => "Номер домашний($NumberPhoneHome):Имя( $NameClient):Date( $DateCreate):Номер Мобильника( $NumberPhone):Адресс($Adress):Дата Рождения($DateBrithDay):Автор($Author):Количество лет($Year):Картинка($ImagePath)";
+
+  List<dynamic> DataExport() => [NameClient,NumberPhoneHome,NumberPhone,Adress,DateCreate,Author,DateBrithDay,Year,ImagePath];
+}
+
 
 
 

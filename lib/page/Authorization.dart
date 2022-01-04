@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:club_v01/DataBase/DataBase.dart';
+import 'package:path_provider/path_provider.dart';
 
 
 class Authorization extends StatefulWidget {
@@ -76,7 +77,15 @@ class _AuthorizationState extends State<Authorization> {
 
  void Coming() async {
    List FindUser =await SearchUser() as List;
-    if(FindUser!= null){Toast("пользователь есть");print('пользователь есть');print(FindUser);Navigator.pushNamed(context, '/help');}
+    if(FindUser!= null){
+      Toast("пользователь есть");
+      print(FindUser);
+      Data_Base_work.WritePut(FindUser, 'DataApp', 'DataAppMenu');
+      Navigator.pushNamed(context, '/help');
+    }
+    else{
+      Toast("пользователь не наден");
+    }
 }
 
   Future pickImage(ImageSource source) async{
@@ -85,8 +94,14 @@ class _AuthorizationState extends State<Authorization> {
     {
       final image = await ImagePicker().pickImage(source: source);
       if(image==null)return;
-    _ImagePath = image.path;
-      final imageTemporary = File(_ImagePath!);
+      final path = await getApplicationDocumentsDirectory();
+      final pathStr = path.path;
+      print(path.path);
+      final fileName = image.name;
+     await image.saveTo('$pathStr/$fileName');
+      final imageTemporary = File('$pathStr/$fileName');
+      print('$pathStr/$fileName');
+      _ImagePath ='$pathStr/$fileName';
       setState(() => this.image = imageTemporary);
     }
     on PlatformException catch (e)

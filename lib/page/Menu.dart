@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:club_v01/DataBase/DataBase.dart';
 
@@ -11,9 +14,29 @@ class MenuDrawer extends StatefulWidget {
 
 class _MenuDrawerState extends State<MenuDrawer> {
 
-  late User MainUser;
+
+  //переменная для бд
+  Data_Base Data_Base_work = Data_Base();
+  List UserInfo=['Нет данных','Нет данных','Нет данных','Нет данных','Нет данных'];
+
+  File? image;
+
+  _MenuDrawerState() {
+    GetUserInfo();
+  }
+  void GetUserInfo()async{
+    UserInfo = await Data_Base_work.ReadID('DataApp', 'DataAppMenu');
+    final imageTemporary = File(UserInfo[3]!);
+    try {
+      setState(() => this.image = imageTemporary);
+    }
+    on PlatformException catch (e){print('ERROR');}
+    print(UserInfo);
+  }
+
 
   @override
+
   Widget build(BuildContext context) {
     return
       Drawer(
@@ -25,13 +48,14 @@ class _MenuDrawerState extends State<MenuDrawer> {
               decoration: BoxDecoration(color: Colors.blue),
               child: UserAccountsDrawerHeader (
                 decoration: BoxDecoration(color: Colors.blue.shade300),
-                accountName: Text('ФИО:'),
-                accountEmail: Text("Уникальны ключ:"),
+                accountName: Text('ФИО:'+UserInfo[0].toString()),
+                accountEmail: Text("Уникальны ключ:"+UserInfo[4].toString()),
                 currentAccountPicture: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      color: Colors.red,
-                    )
+                  child: image != null ? Image.file(image!,
+                    width: 160,
+                    height: 160,
+                    fit: BoxFit.cover,
+                  ):FlutterLogo(size: 160,)
                 ),
               ),
             ),

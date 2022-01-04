@@ -2,6 +2,7 @@ import 'package:club_v01/page/Aboniment/Aboniment_list.dart';
 import 'package:club_v01/page/Aboniment/Aboniment_creator.dart';
 import 'package:flutter/material.dart';
 import 'package:club_v01/page/Client/Client_list.dart';
+import 'package:club_v01/page/Client/Client_ReaderBuy.dart';
 import 'package:club_v01/page/Help.dart';
 import 'package:club_v01/page/Client/Client_creator.dart';
 import 'package:club_v01/page/SplashScreen.dart';
@@ -16,6 +17,9 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(UserAdapter());
+  Hive.registerAdapter(AbonimentAdapter());
+  Hive.registerAdapter(ClientAdapter());
+
   print("Hive инициализирован!");
   runApp(MaterialApp(
     theme: ThemeData(
@@ -26,6 +30,7 @@ void main() async{
     routes: {
       '/SplashScreen':(context)=> SplashScreen(nextRoute: '/Auth'),
       '/help':(context)=> Help(),
+      '/Client_Read':(context)=> Client_ReaderBuy(),
       '/Auth':(context)=> Authorization(),
       '/Stat':(context)=> Statistic(),
       '/Client_list':(context)=> Client_list(),

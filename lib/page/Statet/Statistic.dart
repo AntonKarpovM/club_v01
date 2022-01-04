@@ -115,15 +115,19 @@ void selectDate(BuildContext context,But)async {
 
                     NameTable = "Статистика БД";
 
-
-
+                    final UserInf= await Data_Base_work.Read("TestBox");
+                    final AboInf= await Data_Base_work.Read("TestBoxAboniment");
+                    final CliInf= await Data_Base_work.Read("TestBoxClient");
                     data.clear();
-                    // пречень боксов ({TestUser}{NameBox})
-                    //первая запись в бд
-                 //   Data_Base_work.Write(User("Anton", "123", 310798),"TestUser");
-                     data = await Data_Base_work.Read("TestBox");
+                    data.add(["Общие количество записей:",UserInf.length+AboInf.length+CliInf.length]);
+                    data.add(["Кол-во акк:",UserInf.length]);
+                    data.add(["Кол-во клиентов:",CliInf.length]);
+                    data.add(["Кол-во абониментов:",AboInf.length]);
+                    data.add(["Кол-во (оформлений) Абониментов:",0]);
+                    data.add(["последние внесение в бд:",0]);
+                    data.add(["Послдняя выгрузка бд:",0]);
 
-                    print(data);
+
 
 
                     setState(() {
@@ -138,7 +142,12 @@ void selectDate(BuildContext context,But)async {
                     NameTable = "Список пользователей";
 
                     data.clear();
+                    // пречень боксов ({TestUser}{NameBox})
+                    //первая запись в бд
+                    //   Data_Base_work.Write(User("Anton", "123", 310798),"TestUser");
+                    data = await Data_Base_work.Read("TestBox");
 
+                    print(data);
 
 
 
@@ -152,12 +161,13 @@ void selectDate(BuildContext context,But)async {
                     NameTable = "Список клиентов";
 
                     data.clear();
-                    data.add(["Размер бд(мб):",132]);
-                    data.add(["Кол-во акк:",132]);
-                    data.add(["Кол-во клиентов:",132]);
-                    data.add(["Кол-во абониментов:",132]);
-                    data.add(["последние внесение в бд:",132]);
-                    data.add(["Послдняя выгрузка бд:",132]);
+                    // пречень боксов ({TestUser}{NameBox})
+                    //первая запись в бд
+                    //   Data_Base_work.Write(User("Anton", "123", 310798),"TestUser");
+                    data = await Data_Base_work.Read("TestBoxClient");
+
+                    print(data);
+
 
                     setState(() {
 
@@ -170,12 +180,12 @@ void selectDate(BuildContext context,But)async {
                     NameTable = "Список абониментов";
 
                     data.clear();
-                    data.add(["Размер бд(мб):",132]);
-                    data.add(["Кол-во акк:",132]);
-                    data.add(["Кол-во клиентов:",132]);
-                    data.add(["Кол-во абониментов:",132]);
-                    data.add(["последние внесение в бд:",132]);
-                    data.add(["Послдняя выгрузка бд:",132]);
+                    // пречень боксов ({TestUser}{NameBox})
+                    //первая запись в бд
+                    //   Data_Base_work.Write(User("Anton", "123", 310798),"TestUser");
+                    data = await Data_Base_work.Read("TestBoxAboniment");
+
+                    print(data);
 
                     setState(() {
 
